@@ -1,0 +1,28 @@
+{
+  "name": "xuangu-speedtest",
+  "version": "1.0.0",
+  "description": "玄古测速 - Neo Chinese-Tech Speed Test",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "node --watch server/index.js",
+    "start": "node server/index.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": ["speedtest", "network", "neo-chinese"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>布局检查 - 网络测速</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .check-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .check-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .check-item:last-child {
+      border-bottom: none;
+    }
+    .status {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+    }
+    .status.ok {
+      background: #10b981;
+    }
+    .status.warn {
+      background: #f59e0b;
+    }
+    .status.error {
+      background: #ef4444;
+    }
+    .check-label {
+      flex: 1;
+      color: #666;
+    }
+    .check-value {
+      font-weight: 500;
+      color: #333;
+    }
+    .preview {
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      background: #fafafa;
+    }
+    .code {
+      font-family: 'Courier New', monospace;
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="margin-bottom: 20px; color: #111;">网络测速界面布局检查</h1>
+
+  <div class="check-section">
+    <div class="check-title">📋 HTML 结构检查</div>
+    <div class="check-item">
+      <div class="status ok" id="html-valid">✓</div>
+      <div class="check-label">HTML 文档结构</div>
+      <div class="check-value" id="html-result">检查中...</div>
+    </div>
+    <div class="check-item">
+      <div class="status ok" id="elements-valid">✓</div>
+      <div class="check-label">必需元素</div>
+      <div class="check-value" id="elements-result">检查中...</div>
+    </div>
+    <div class="check-item">
+      <div class="status ok" id="ids-valid">✓</div>
+      <div class="check-label">ID 引用</div>
+      <div class="check-value" id="ids-result">检查中...</div>
+    </div>
+  </div>
+
+  <div class="check-section">
+    <div class="check-title">🎨 CSS 样式检查</div>
+    <div class="check-item">
+      <div class="status ok" id="css-load">✓</div>
+      <div class="check-label">样式表加载</div>
+      <div class="check-value" id="css-result">检查中...</div>
+    </div>
+    <div class="check-item">
+      <div class="status ok" id="font-load">✓</div>
+      <div class="check-label">字体加载</div>
+      <div class="check-value" id="font-result">检查中...</div>
+    </div>
+    <div class="check-item">
+      <div class="status ok" id="responsive">✓</div>
+      <div class="check-label">响应式布局</div>
+      <div class="check-value" id="responsive-result">检查中...</div>
+    </div>
+  </div>
+
+  <div class="check-section">
+    <div class="check-title">⚙️ JavaScript 检查</div>
+    <div class="check-item">
+      <div class="status ok" id="js-load">✓</div>
+      <div class="check-label">模块加载</div>
+      <div class="check-value" id="js-result">检查中...</div>
+    </div>
+    <div class="check-item">
+      <div class="status ok" id="api-check">✓</div>
+      <div class="check-label">API 连接</div>
+      <div class="check-value" id="api-result">检查中...</div>
+    </div>
+  </div>
+
+  <div class="check-section">
+    <div class="check-title">📱 视口和布局测试</div>
+    <div class="preview">
+      <strong>当前视口尺寸：</strong>
+      <span id="viewport-size" class="code">加载中...</span><br>
+      <strong>设备类型：</strong>
+      <span id="device-type" class="code">加载中...</span>
+    </div>
+  </div>
+
+  <script>
+    // 检查主页面元素
+    async function checkLayout() {
+      try {
+        const response = await fetch('/');
+        const html = await response.text();
+
+        // 检查关键元素
+        const requiredIds = [
+          'theme-toggle',
+          'speed-value',
+          'speed-label',
+          'progress-bar',
+          'test-btn',
+          'download-value',
+          'upload-value',
+          'ping-value',
+          'jitter-value',
+          'info-ip',
+          'info-isp',
+          'info-node'
+        ];
+
+        const missing = requiredIds.filter(id => !html.includes(`id="${id}"`));
+
+        if (missing.length === 0) {
+          document.getElementById('elements-result').textContent = '所有必需元素存在';
+          document.getElementById('elements-valid').className = 'status ok';
+          document.getElementById('elements-valid').textContent = '✓';
+        } else {
+          document.getElementById('elements-result').textContent = `缺少: ${missing.join(', ')}`;
+          document.getElementById('elements-valid').className = 'status error';
+          document.getElementById('elements-valid').textContent = '✗';
+        }
+
+        // 检查HTML结构
+        if (html.includes('<!DOCTYPE html>') && html.includes('<html lang="zh-CN">')) {
+          document.getElementById('html-result').textContent = '规范';
+        } else {
+          document.getElementById('html-result').textContent = '不规范';
+          document.getElementById('html-valid').className = 'status warn';
+        }
+
+        // 检查ID唯一性
+        const idMatches = html.match(/id="([^"]+)"/g);
+        const ids = idMatches ? idMatches.map(m => m.match(/id="([^"]+)"/)[1]) : [];
+        const uniqueIds = new Set(ids);
+
+        if (ids.length === uniqueIds.size) {
+          document.getElementById('ids-result').textContent = `${ids.length} 个唯一ID`;
+        } else {
+          document.getElementById('ids-result').textContent = '存在重复ID';
+          document.getElementById('ids-valid').className = 'status error';
+        }
+
+      } catch (err) {
+        document.getElementById('html-result').textContent = '检查失败: ' + err.message;
+        document.getElementById('html-valid').className = 'status error';
+      }
+    }
+
+    // 检查CSS
+    async function checkCSS() {
+      try {
+        const response = await fetch('/css/style.css');
+        if (response.ok) {
+          const css = await response.text();
+          document.getElementById('css-result').textContent = `${(css.length / 1024).toFixed(1)} KB`;
+
+          // 检查关键样式类
+          const requiredClasses = ['.container', '.card', '.btn-primary', '.navbar'];
+          const missing = requiredClasses.filter(cls => !css.includes(cls));
+
+          if (missing.length > 0) {
+            document.getElementById('css-result').textContent += ` (缺少: ${missing.join(', ')})`;
+            document.getElementById('css-load').className = 'status warn';
+          }
+        } else {
+          throw new Error('CSS文件未找到');
+        }
+      } catch (err) {
+        document.getElementById('css-result').textContent = '加载失败';
+        document.getElementById('css-load').className = 'status error';
+        document.getElementById('css-load').textContent = '✗';
+      }
+    }
+
+    // 检查字体
+    function checkFonts() {
+      document.fonts.ready.then(() => {
+        const fontCount = document.fonts.size;
+        document.getElementById('font-result').textContent = `${fontCount} 个字体已加载`;
+      });
+    }
+
+    // 检查响应式
+    function checkResponsive() {
+      const width = window.innerWidth;
+      let type = '桌面';
+      if (width < 480) type = '手机';
+      else if (width < 768) type = '平板';
+
+      document.getElementById('responsive-result').textContent = `${type} (${width}px)`;
+      document.getElementById('viewport-size').textContent = `${window.innerWidth} × ${window.innerHeight}`;
+      document.getElementById('device-type').textContent = type;
+    }
+
+    // 检查JS模块
+    async function checkJS() {
+      try {
+        const modules = ['/js/main.js', '/js/gauge.js', '/js/ui.js', '/js/measure.js', '/js/net.js'];
+        const results = await Promise.all(modules.map(m => fetch(m)));
+        const loaded = results.filter(r => r.ok).length;
+
+        if (loaded === modules.length) {
+          document.getElementById('js-result').textContent = `${loaded}/${modules.length} 模块正常`;
+        } else {
+          document.getElementById('js-result').textContent = `${loaded}/${modules.length} 模块加载`;
+          document.getElementById('js-load').className = 'status warn';
+        }
+      } catch (err) {
+        document.getElementById('js-result').textContent = '检查失败';
+        document.getElementById('js-load').className = 'status error';
+      }
+    }
+
+    // 检查API
+    async function checkAPI() {
+      try {
+        const response = await fetch('/api/ping');
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('api-result').textContent = '连接正常';
+        } else {
+          throw new Error('API响应错误');
+        }
+      } catch (err) {
+        document.getElementById('api-result').textContent = '连接失败';
+        document.getElementById('api-check').className = 'status error';
+        document.getElementById('api-check').textContent = '✗';
+      }
+    }
+
+    // 运行所有检查
+    checkLayout();
+    checkCSS();
+    checkFonts();
+    checkResponsive();
+    checkJS();
+    checkAPI();
+
+    window.addEventListener('resize', checkResponsive);
+  </script>
+</body>
+</html>

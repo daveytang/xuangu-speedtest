@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="全球网络质量检测，精准洞察网络性能">
+  <title>玄古测速 - 跨境网络质量检测</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar card-panel">
+      <div class="topbar-brand">
+        <div class="logo-section">
+          <img src="/logo.png" alt="玄古LOGO" class="logo" onerror="this.src='/logo.svg'">
+          <div>
+            <div class="logo-text">玄古测速</div>
+            <div class="logo-subtitle">NETWORK DIAGNOSTICS</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar-copy">
+        <div class="topbar-meta">
+          <span class="topbar-chip">实时测速</span>
+          <span class="topbar-chip">单屏展示</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="gauge-panel card-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="panel-eyebrow">实时读数</div>
+            <h2 class="panel-title">当前测速阶段</h2>
+          </div>
+          <span class="status-pill">在线监测</span>
+        </div>
+
+        <div class="gauge-layout">
+          <div class="gauge-primary">
+            <div class="speed-circle">
+              <svg class="speed-ring" viewBox="0 0 200 200" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#22D3EE"/>
+                    <stop offset="100%" style="stop-color:#06B6D4"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(34,211,238,0.10)" stroke-width="10"/>
+                <circle id="speed-progress" cx="100" cy="100" r="90" fill="none" stroke="url(#ring-gradient)" stroke-width="10" stroke-linecap="round" style="stroke-dasharray: 565.48; stroke-dashoffset: 565.48; transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset 0.4s ease;"/>
+              </svg>
+
+              <div class="speed-display">
+                <div class="speed-number" id="speed-number">0</div>
+                <div class="speed-unit" id="speed-unit">Mbps</div>
+                <div class="speed-status" id="speed-status">准备开始</div>
+              </div>
+            </div>
+
+            <div class="speed-actions">
+              <button id="test-btn" class="primary-button">
+                <span class="button-text" id="btn-text">开始测速</span>
+                <div class="button-loader" id="btn-loader" style="display: none;">
+                  <div class="loader-spinner"></div>
+                </div>
+              </button>
+              <button id="retest-btn" class="secondary-button" style="display: none;">重新测速</button>
+            </div>
+          </div>
+
+          <div class="panel-metrics">
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div class="metric-icon-wrapper">
+                    <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                  </div>
+                  <span class="metric-label">下载</span>
+                </div>
+                <div class="metric-value-wrapper">
+                  <span id="download-value" class="metric-value">--</span>
+                  <span class="metric-unit">Mbps</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div class="metric-icon-wrapper">
+                    <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                  </div>
+                  <span class="metric-label">上传</span>
+                </div>
+                <div class="metric-value-wrapper">
+                  <span id="upload-value" class="metric-value">--</span>
+                  <span class="metric-unit">Mbps</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div class="metric-icon-wrapper">
+                    <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </div>
+                  <span class="metric-label">延迟</span>
+                </div>
+                <div class="metric-value-wrapper">
+                  <span id="ping-value" class="metric-value">--</span>
+                  <span class="metric-unit">ms</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div class="metric-icon-wrapper">
+                    <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                  </div>
+                  <span class="metric-label">抖动</span>
+                </div>
+                <div class="metric-value-wrapper">
+                  <span id="jitter-value" class="metric-value">--</span>
+                  <span class="metric-unit">ms</span>
+                </div>
+              </div>
+
+              <div class="metric-card metric-card-wide">
+                <div class="metric-header">
+                  <div class="metric-icon-wrapper">
+                    <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 7h16M7 4v6M17 4v6M6 14h4M14 14h4M9 20h6"/>
+                    </svg>
+                  </div>
+                  <span class="metric-label">丢包率</span>
+                </div>
+                <div class="metric-value-wrapper">
+                  <span id="packet-loss-value" class="metric-value">--</span>
+                  <span class="metric-unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <div class="inline-info">
+          <div class="inline-info-heading">
+            <div>
+              <div class="panel-eyebrow">连接上下文</div>
+              <h3 class="inline-info-title">连接信息</h3>
+            </div>
+            <span class="panel-meta">实时采集</span>
+          </div>
+          <div class="info-list info-list-inline">
+            <div class="info-item">
+              <span class="info-key">IP 地址</span>
+              <span id="info-ip" class="info-value">获取中...</span>
+            </div>
+            <div class="info-item">
+              <span class="info-key">运营商</span>
+              <span id="info-isp" class="info-value">获取中...</span>
+            </div>
+            <div class="info-item">
+              <span class="info-key">测试节点</span>
+              <span id="info-node" class="info-value">获取中...</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="gauge-caption">按 <kbd>Esc</kbd> 可中止当前测速。</p>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

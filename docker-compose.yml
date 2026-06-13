@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  speedtest:
+    build: .
+    container_name: xuangu-speedtest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NODE_NAME=默认节点
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/ping', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    # 资源限制（适用于2C2G VPS）
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    networks:
+      - speedtest-net
+
+networks:
+  speedtest-net:
+    driver: bridge
