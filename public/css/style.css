@@ -520,6 +520,7 @@ kbd {
 @container (max-width: 700px) {
   .gauge-panel {
     min-height: 280px;
+    align-self: start;
   }
 }
 
@@ -558,6 +559,8 @@ kbd {
     height: calc(100dvh - 10px);
     margin: 5px auto;
     gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .topbar,
@@ -602,6 +605,10 @@ kbd {
 
   .workspace {
     justify-content: flex-start;
+  }
+
+  .gauge-panel {
+    align-self: start;
   }
 
   .gauge-layout {
