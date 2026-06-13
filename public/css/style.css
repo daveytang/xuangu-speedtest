@@ -554,15 +554,6 @@ kbd {
 }
 
 @container (max-width: 560px) {
-  .app-shell {
-    width: calc(100vw - 10px);
-    height: calc(100dvh - 10px);
-    margin: 5px auto;
-    gap: 5px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
   .topbar,
   .gauge-panel,
   .info-card {
@@ -725,6 +716,28 @@ kbd {
   .info-value {
     font-size: 10px;
     -webkit-line-clamp: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  html,
+  body {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .app-shell {
+    width: calc(100vw - 10px);
+    height: auto;
+    min-height: calc(100svh - 10px);
+    min-height: calc(100dvh - 10px);
+    margin: 5px auto;
+    gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   }
 }
 
