@@ -10,6 +10,7 @@
 NODE_ENV=production
 PORT=3000
 NODE_NAME=北京节点  # 自定义节点名称
+ACCESS_PASSWORD=6666  # 访问密码，部署后建议改成内部密码
 ```
 
 ## 2. Nginx配置关键点

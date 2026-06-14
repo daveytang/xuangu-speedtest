@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="玄古测速访问验证">
+  <title>访问验证 - 玄古测速</title>
+  <style>
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/inter/inter-latin-400-normal.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('/fonts/inter/inter-latin-600-normal.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/fonts/inter/inter-latin-700-normal.woff2') format('woff2');
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      color: #fafafa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(ellipse at top, rgba(34, 211, 238, 0.14), transparent 42%),
+        radial-gradient(ellipse at bottom, rgba(251, 146, 60, 0.11), transparent 46%),
+        #09090b;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(39, 39, 42, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(39, 39, 42, 0.2) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent);
+    }
+
+    .login-panel {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 380px);
+      padding: 22px;
+      border: 1px solid rgba(63, 63, 70, 0.32);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(24, 24, 27, 0.42), rgba(9, 9, 11, 0.66));
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      padding: 4px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .brand-subtitle {
+      color: #71717a;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: #67e8f9;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-top: 6px;
+      font-size: 22px;
+      line-height: 1.18;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: #a1a1aa;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    form {
+      margin-top: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      color: #a1a1aa;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid rgba(63, 63, 70, 0.7);
+      border-radius: 10px;
+      outline: none;
+      padding: 0 12px;
+      color: #fafafa;
+      font: inherit;
+      background: rgba(9, 9, 11, 0.64);
+    }
+
+    input:focus {
+      border-color: rgba(6, 182, 212, 0.72);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.13);
+    }
+
+    button {
+      min-height: 42px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: #042f2e;
+      background: rgba(6, 182, 212, 0.94);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    .error {
+      min-height: 18px;
+      color: #fca5a5;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <main class="login-panel">
+    <div class="brand">
+      <img src="/logo.png" alt="玄古测速 LOGO" class="logo">
+      <div>
+        <div class="brand-title">玄古测速</div>
+        <div class="brand-subtitle">NETWORK DIAGNOSTICS</div>
+      </div>
+    </div>
+
+    <div class="eyebrow">内部访问</div>
+    <h1>请输入访问密码</h1>
+    <p class="hint">测速会占用服务器带宽，输入内部密码后才能进入测速页面。</p>
+
+    <form id="login-form">
+      <label for="password">访问密码</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" autofocus required>
+      <button id="submit-btn" type="submit">进入测速</button>
+      <div id="error" class="error" role="alert"></div>
+    </form>
+  </main>
+  <script src="/js/login.js"></script>
+</body>
+</html>

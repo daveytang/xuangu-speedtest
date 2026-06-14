@@ -11,8 +11,9 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - NODE_NAME=默认节点
+      - ACCESS_PASSWORD=6666
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/ping', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/healthz', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
       timeout: 3s
       retries: 3

@@ -138,6 +138,7 @@ docker-compose down
 | `PORT` | `3000` | 服务监听端口 |
 | `NODE_ENV` | `development` | 运行环境 |
 | `NODE_NAME` | `默认节点` | 页面中显示的测试节点名称 |
+| `ACCESS_PASSWORD` | `6666` | 访问测速页面和 API 的密码 |
 
 ## 测速实现说明
 

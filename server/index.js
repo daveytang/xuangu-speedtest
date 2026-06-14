@@ -1,5 +1,6 @@
 import express from 'express';
 import compression from 'compression';
+import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pingRouter from './routes/ping.js';
@@ -7,12 +8,24 @@ import downloadRouter from './routes/download.js';
 import uploadRouter from './routes/upload.js';
 import metaRouter from './routes/meta.js';
 import { rateLimitMiddleware } from './middleware/rateLimit.js';
+import { handleLogin, handleLogout, isAuthenticated, requireAuth } from './middleware/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: '尝试次数过多，请稍后再试' }
+});
+
+function getSafeNextUrl(next) {
+  return typeof next === 'string' && next.startsWith('/') && !next.startsWith('//') ? next : '/';
+}
 
 // Security headers
 app.use((req, res, next) => {
@@ -25,6 +38,24 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use(express.json({ limit: '1kb', type: 'application/json' }));
+
+app.get('/healthz', (req, res) => {
+  res.json({ ok: true });
+});
+
+app.get('/login', (req, res) => {
+  if (isAuthenticated(req)) {
+    return res.redirect(getSafeNextUrl(req.query.next));
+  }
+
+  return res.sendFile(path.join(__dirname, '../public/login.html'));
+});
+
+app.post('/api/auth/login', authRateLimit, handleLogin);
+app.post('/api/auth/logout', handleLogout);
+app.use(requireAuth);
 
 // Compression for static files only, NOT for /api routes
 app.use(compression({
