@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader(
     'Content-Security-Policy',
-    'default-src \'self\'; font-src \'self\' https://fonts.gstatic.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; script-src \'self\'; connect-src \'self\'; img-src \'self\' data:;'
+    'default-src \'self\'; font-src \'self\'; style-src \'self\' \'unsafe-inline\'; script-src \'self\'; connect-src \'self\'; img-src \'self\' data:;'
   );
   next();
 });
