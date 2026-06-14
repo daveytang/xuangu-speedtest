@@ -2,18 +2,53 @@ import express from 'express';
 
 const router = express.Router();
 
+function isValidIpv4(ip) {
+  const parts = ip.split('.');
+  return parts.length === 4 && parts.every((part) => {
+    if (!/^\d{1,3}$/.test(part)) return false;
+    const value = Number(part);
+    return value >= 0 && value <= 255;
+  });
+}
+
+function normalizeIpv4(value) {
+  if (!value) return null;
+
+  const raw = String(value).trim();
+  const mappedIpv4 = raw.match(/^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i);
+  const plainIpv4 = raw.match(/^(\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?$/);
+  const ip = mappedIpv4?.[1] || plainIpv4?.[1];
+
+  return ip && isValidIpv4(ip) ? ip : null;
+}
+
+function getClientIpv4(req) {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const forwardedCandidates = Array.isArray(forwardedFor)
+    ? forwardedFor.flatMap((value) => value.split(','))
+    : String(forwardedFor || '').split(',');
+
+  const candidates = [
+    ...forwardedCandidates,
+    req.headers['x-real-ip'],
+    req.socket.remoteAddress
+  ];
+
+  for (const candidate of candidates) {
+    const ip = normalizeIpv4(candidate);
+    if (ip) return ip;
+  }
+
+  return 'unknown';
+}
+
 /**
  * GET /api/meta
  * 返回客户端IP、ISP/ASN/地理位置、服务器节点信息
  * 使用ip-api.com免费接口解析地理位置（无需本地数据库，部署更简单）
  */
 router.get('/meta', async (req, res) => {
-  // 获取真实客户端IP（考虑反向代理）
-  const clientIp =
-    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-    req.headers['x-real-ip'] ||
-    req.socket.remoteAddress ||
-    'unknown';
+  const clientIp = getClientIpv4(req);
 
   // 服务器节点名（从环境变量读取，默认为"默认节点"）
   const nodeName = process.env.NODE_NAME || '默认节点';
