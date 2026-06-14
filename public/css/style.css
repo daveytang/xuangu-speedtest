@@ -179,7 +179,7 @@ body::before {
 .workspace {
   min-height: 0;
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -315,7 +315,7 @@ body::before {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 10px;
-  align-self: center;
+  align-self: start;
 }
 
 .gauge-layout {
@@ -498,7 +498,7 @@ kbd {
   font-size: 12px;
 }
 
-@container (max-width: 900px) {
+@container (max-width: 780px) {
   .gauge-layout {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -600,10 +600,22 @@ kbd {
 
   .gauge-panel {
     align-self: start;
+    grid-template-rows: auto auto auto auto;
+    gap: 8px;
   }
 
   .gauge-layout {
+    min-height: auto;
     gap: 8px;
+  }
+
+  .panel-heading {
+    margin-bottom: 4px;
+  }
+
+  .panel-metrics {
+    height: auto;
+    padding: 3px;
   }
 
   .metrics-grid {
@@ -612,12 +624,17 @@ kbd {
   }
 
   .metric-card {
-    min-height: 68px;
+    min-height: 62px;
     padding: 8px;
   }
 
   .metric-header {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+  }
+
+  .metric-icon-wrapper {
+    width: 28px;
+    height: 28px;
   }
 
   .metric-label,
@@ -658,6 +675,10 @@ kbd {
   .topbar-chip {
     font-size: 10px;
     padding: 2px 7px;
+  }
+
+  .topbar-chip:nth-child(2) {
+    display: none;
   }
 
   .panel-meta {
@@ -716,6 +737,10 @@ kbd {
   .info-value {
     font-size: 10px;
     -webkit-line-clamp: 1;
+  }
+
+  .gauge-caption {
+    display: none;
   }
 }
 
@@ -792,7 +817,36 @@ kbd {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 560px) and (max-height: 860px) {
+  .speed-circle {
+    width: min(100%, 174px);
+  }
+
+  .metric-card {
+    min-height: 64px;
+  }
+
+  .info-item {
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 560px) and (max-height: 760px) {
+  .speed-circle {
+    width: min(100%, 158px);
+  }
+
+  .gauge-primary {
+    gap: 6px;
+  }
+
+  .speed-actions .primary-button,
+  .speed-actions .secondary-button {
+    min-height: 32px;
+  }
+}
+
+@media (max-width: 340px) {
   .metrics-grid {
     grid-template-columns: 1fr;
   }
