@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 const COOKIE_NAME = 'speedtest_auth';
-const COOKIE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60;
+const COOKIE_MAX_AGE_SECONDS = 5 * 60;
 const PUBLIC_ASSET_PATHS = new Set(['/favicon.ico', '/logo.png', '/js/login.js']);
 
 function getPassword() {

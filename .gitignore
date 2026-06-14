@@ -26,6 +26,10 @@ Thumbs.db
 logs/
 *.log
 
+# Debug / audit
+.dbg/
+*.ndjson
+
 # Docker
 .dockerignore
 
